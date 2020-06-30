@@ -1,0 +1,62 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@using X.PagedList;
+@using X.PagedList.Mvc;
+@using X.PagedList.Web; 
+
+@model PagedList.IPagedList<Cars>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to #SiteName#</h1>
+</div>
+<div class="text-left">
+    <p>Feel free to browse our website.</p>
+</div>
+<br />
+
+<form method="get" asp-action="Index" asp-controller="Home">
+    <b> Search filter:  </b> <input type="text" id="SearchQuery" name="SearchQuery" />
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+@if (Model.Any())
+{
+
+    @foreach (var car in Model)
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                Car title : @car.FullName <br />
+                Produced : @car.ProdDate
+
+            </div>
+            <div class="card-body">
+            </div>
+            <div class="card-footer">
+                Price : @car.Price MKD <br />
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="card">
+        <div class="card-header">
+            No results found.
+        </div>
+        <div class="card-body">
+            <h5 class="card-title"> Try seaching with different parameters.</h5>
+        </div>
+    </div>
+}
+
+
+Page @(Model.PageCount <Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+
+
+
