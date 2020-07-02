@@ -1,0 +1,48 @@
+﻿
+@model IEnumerable<CarCart>
+
+@{
+    ViewBag.Title = "My cart";
+}
+
+<br />
+<h2>Current items in your cart</h2>
+<br />
+
+@if (Model.Any())
+{
+    foreach (var item in Model)
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                Car name : @item.car.FullName <br />
+                Produced : @item.car.ProdDate <br />
+                Owner : @item.car.Owner.UserName
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Your telephone: @item.Telephone</h5>
+                <p>@item.car.Description</p>
+            </div>
+            <div class="card-footer">
+                Meet date: @item.MeetDate <br />
+                Price : @item.car.Price MKD <br />
+                Your price: @item.RequestPrice <br />
+                <a class="btn btn-primary" style="margin-bottom:5px" asp-action="EditCartEntry" asp-controller="UserManagement" asp-route-itemId="@item.Id" asp-route-name="@item.car.FullName">Edit</a>
+                <form method="post" asp-route-itemId="@item.Id" asp-action="DeleteCartItem" asp-controller="UserManagement">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="card">
+        <div class="card-header">
+            No items found.
+        </div>
+        <div class="card-body">
+            You cart is empty.
+        </div>
+    </div>
+}

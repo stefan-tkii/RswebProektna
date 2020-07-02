@@ -1,0 +1,27 @@
+﻿@model Cars
+
+@{
+    ViewBag.Title = "Details view";
+}
+
+<br />
+<h3>Details for @Model.FullName</h3>
+
+<div class="card mb-3">
+    <div class="card-header">
+        Car name : @Model.FullName <br />
+        Produced : @Model.ProdDate <br />
+        Owner: @Model.Owner.FirstName @Model.Owner.LastName <br />
+        Owner username: @Model.Owner.UserName
+    </div>
+    <div class="card-body">
+        <h6 class="card-title">Location: @Model.Location</h6>
+        <hr />
+        <p>@Model.Description</p>
+    </div>
+    <div class="card-footer">
+        Price : @Model.Price MKD <br />
+        <br />   
+            <a asp-controller="UserManagement" asp-action="AddCart" asp-route-carId="@Model.Id" class="btn btn-primary" style="width:auto">Add to cart</a>
+    </div>
+</div>

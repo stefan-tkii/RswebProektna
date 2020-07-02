@@ -1,0 +1,46 @@
+﻿@model List<CarCart>
+
+@{
+    ViewBag.Title = "User requests";
+}
+
+<h2>List of pending requests</h2>
+<br />
+
+@if (Model.Any())
+{
+    foreach (var item in Model)
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                Car name : @item.car.FullName <br />
+                Produced : @item.car.ProdDate <br />
+                Requester : @item.siteUser.UserName
+            </div>
+            <div class="card-body">
+                <h5 class="card-title"> Telephone: @item.Telephone</h5>
+                <p>@item.car.Description</p>
+            </div>
+            <div class="card-footer">
+                Meet date: @item.MeetDate <br />
+                Price : @item.car.Price MKD <br />
+                Your price: @item.RequestPrice MKD <br />
+                <br />
+                <form method="post" asp-route-itemId="@item.Id" asp-action="DeleteCartItem" asp-controller="UserManagement">
+                    <button type="submit" class="btn btn-danger">Decline</button>
+                </form>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="card">
+        <div class="card-header">
+            No requests found.
+        </div>
+        <div class="card-body">
+            Your requests list is empty.
+        </div>
+    </div>
+}

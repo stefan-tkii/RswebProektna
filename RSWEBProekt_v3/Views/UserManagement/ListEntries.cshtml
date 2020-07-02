@@ -1,0 +1,43 @@
+﻿@model RSWEBProekt_v1.ViewModels.UserEntries
+
+@{
+    ViewBag.Title = "Current entries";
+}
+
+<h1>List of all entries by you</h1>
+
+@if (Model.carEntries.Any())
+{
+    foreach (var car in Model.carEntries)
+    {
+    <div class="card mb-3">
+        <div class="card-header">
+            Car title : @car.FullName <br />
+            Produced : @car.ProdDate
+
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">@car.Location</h5>
+            <p>@car.Description</p>
+        </div>
+        <div class="card-footer">
+           Price : @car.Price MKD <br />
+            <a class="btn btn-primary" style="margin-bottom:5px" asp-action="EditEntryCar" asp-controller="UserManagement" asp-route-carId="@car.Id">Edit</a>
+            <form method="post" asp-route-carId="@car.Id" asp-action="DeleteEntryCar" asp-controller="UserManagement">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    </div>
+    }
+}
+else
+{
+    <div class="card">
+        <div class="card-header">
+            No entries found.
+        </div>
+        <div class="card-body">
+            You must make entries first in order to view them here.
+        </div>
+    </div>
+}
