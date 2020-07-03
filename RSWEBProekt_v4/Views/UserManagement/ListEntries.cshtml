@@ -1,0 +1,54 @@
+﻿@model List<RSWEBProekt_v1.ViewModels.UserEntries>
+
+@{
+    ViewBag.Title = "Current entries";
+    var altsrc = ViewData["Alt"].ToString();
+}
+
+<h1>List of all entries by you</h1>
+
+@if (Model.Any())
+{
+    foreach (var car in Model)
+    {
+    <div class="card mb-3">
+        <div class="card-header">
+            Car title : @car.FullName <br />
+            Produced : @car.ProdDate
+
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">@car.Location</h5>
+            <p>@car.Description</p> <br />
+            <div style="width:450px; height:300px">
+                @if (car.ImagePath != null)
+                {
+                <img src="@Url.Content(car.ImagePath)" alt="Image not found." style="max-width:100%; max-height:100%; display:block" />
+                }
+                else
+                {
+                    <img src="@Url.Content(altsrc)" alt="Image not found." style="max-width:100%; max-height:100%; display:block" />
+                }
+            </div>
+        </div>
+        <div class="card-footer">
+           Price : @car.Price MKD <br />
+            <a class="btn btn-primary" style="margin-bottom:5px" asp-action="EditEntryCar" asp-controller="UserManagement" asp-route-carId="@car.Id">Edit</a>
+            <form method="post" asp-route-carId="@car.Id" asp-action="DeleteEntryCar" asp-controller="UserManagement">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    </div>
+    }
+}
+else
+{
+    <div class="card">
+        <div class="card-header">
+            No entries found.
+        </div>
+        <div class="card-body">
+            You must make entries first in order to view them here.
+        </div>
+    </div>
+}
