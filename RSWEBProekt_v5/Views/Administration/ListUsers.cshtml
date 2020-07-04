@@ -1,0 +1,78 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using RSWEBProekt_v1.Models;
+@inject SignInManager<SiteUser> signInManager;
+@inject UserManager<SiteUser> userManager;
+
+@model PaginatedList<SiteUser>
+
+@{
+    ViewBag.Title = "All users";
+}
+
+<h1 class="text-center">List of all registered users</h1>
+<br />
+
+<form asp-action="ListUsers" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by username: <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Search" class="btn btn-primary" /> |
+            <a asp-action="ListUsers">Back to Full List</a>
+        </p>
+    </div>
+</form>
+<br />
+
+@if (Model.Any())
+{
+    foreach (var user in Model)
+    {
+        if (await userManager.IsInRoleAsync(user, "User"))
+        {
+            <div class="card mb-3">
+                <div class="card-header">
+                    User Id : @user.Id
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">@user.UserName</h5>
+                </div>
+                <div class="card-footer">
+                    <form asp-action="DeleteUser" asp-route-id="@user.Id" asp-controller="Administration" method="post">
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                    </form>
+                </div>
+            </div>
+        }
+    }
+
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+
+        <a asp-action="ListUsers"
+           asp-route-pageNumber="@(Model.PageIndex - 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn btn-primary @prevDisabled">
+            Previous
+        </a>
+        <a asp-action="ListUsers"
+           asp-route-pageNumber="@(Model.PageIndex + 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn btn-primary @nextDisabled">
+            Next
+        </a>
+        <br />
+        <b>Page @Model.PageIndex of @Model.TotalPages</b>
+
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-header">
+                No users found
+            </div>
+            <div class="card-body">
+                Users must be registered first to be able to list them here.
+            </div>
+        </div>
+    }
+

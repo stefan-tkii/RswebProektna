@@ -1,0 +1,103 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using RSWEBProekt_v1.Models;
+@inject SignInManager<SiteUser> signInManager;
+
+@model PaginatedList<Cars>
+
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<h1 class="text-center">Home page</h1>
+<br />
+
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by name/model: <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Search" class="btn btn-primary" /> |
+            <a asp-action="Index">Back to Full List</a>
+        </p>
+    </div>
+</form>
+<br />
+
+@if (Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Car's name and model</a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["PriceSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Price</a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Production date</a>
+                </th>
+                <th>
+                    Owner's full name
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProdDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Owner.FirstName) @Html.DisplayFor(modelItem => item.Owner.LastName)
+                    </td>
+                    <td>
+                        @if (signInManager.IsSignedIn(User))
+                        {
+                            <a asp-controller="Home" asp-action="DetailsView" asp-route-itemId="@item.Id" class="btn btn-primary" style="width:auto">View details</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+    <br />
+
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+
+    <a asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.PageIndex - 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-primary @prevDisabled">
+        Previous
+    </a>
+    <a asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.PageIndex + 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-primary @nextDisabled">
+        Next
+    </a>
+    <br />
+    <b>Page @Model.PageIndex of @Model.TotalPages</b>
+
+}
+
+else
+{
+    <h3 class="text-center">No results found</h3>
+}
+
+
+
+
